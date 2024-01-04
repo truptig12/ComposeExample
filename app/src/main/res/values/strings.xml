@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">ComposeExample</string>
+    <string name="title_activity_text">TextActivity</string>
+    <string name="title_activity_state_compose">StateComposeActivity</string>
+    <string name="title_activity_snack_bar_sample">SnackBarSample</string>
+    <string name="title_activity_lists">Lists</string>
+    <string name="title_activity_constraint_layout_ex">ConstraintLayoutEx</string>
+    <string name="title_activity_effect_hanlders_ex">EffectHanldersEx</string>
+</resources>
