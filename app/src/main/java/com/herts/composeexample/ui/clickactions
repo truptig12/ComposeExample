@@ -1,0 +1,87 @@
+/**
+ * Provides custom click actions for Espresso tests including standard clicks, long clicks,
+ * and clicking on child views or spannable text elements.
+ */
+object ClickActions {
+
+    /**
+     * Performs a single click on the matched view.
+     */
+    fun click(): ViewAction = ViewActions.click()
+
+    /**
+     * Performs a double-click on the matched view.
+     */
+    fun doubleClick(): ViewAction = ViewActions.doubleClick()
+
+    /**
+     * Performs a long-click on the matched view.
+     */
+    fun longClick(): ViewAction = ViewActions.longClick()
+
+    /**
+     * Clicks on a child view by its ID inside a specified parent view.
+     *
+     * @param parentViewId Resource ID of the parent view
+     * @param childViewId Resource ID of the child view
+     */
+    fun clickOnChildView(parentViewId: Int, childViewId: Int): ViewAction = object : ViewAction {
+        override fun getConstraints() = ViewActions.click().constraints
+
+        override fun getDescription() = "Click on a child view with specified ID"
+
+        override fun perform(uiController: UiController, view: View) {
+            val parent = view.findViewById<View>(parentViewId)
+            parent?.findViewById<View>(childViewId)?.performClick()
+                ?: throw AssertionError("Child view with id $childViewId not found in parent $parentViewId")
+        }
+    }
+
+    /**
+     * Clicks on a child view matched by [childMatcher] inside a view matched by [parentMatcher].
+     *
+     * @param parentMatcher Matcher for the parent view
+     * @param childMatcher Matcher for the child view inside the parent
+     */
+    fun clickOnChild(parentMatcher: Matcher<View>, childMatcher: Matcher<View>): ViewAction = object : ViewAction {
+        override fun getConstraints() = ViewActions.click().constraints
+
+        override fun getDescription() = "Click on a child view matching matcher"
+
+        override fun perform(uiController: UiController, view: View) {
+            val root = view
+            val child = TreeIterables.breadthFirstViewTraversal(root).firstOrNull {
+                childMatcher.matches(it)
+            }
+            child?.performClick()
+                ?: throw AssertionError("Child matching matcher not found")
+        }
+    }
+
+    /**
+     * Clicks on a specific clickable span (e.g. link) within a TextView.
+     *
+     * @param textRes Resource ID of the spannable text to click
+     */
+    fun clickSpannableText(textRes: Int): ViewAction = object : ViewAction {
+        override fun getDescription() = "Click on ClickableSpan text"
+
+        override fun getConstraints() = isAssignableFrom(TextView::class.java)
+
+        override fun perform(uiController: UiController, view: View) {
+            val context = view.context
+            val textToMatch = context.getString(textRes)
+            val textView = view as TextView
+            val text = textView.text
+
+            if (text is Spanned) {
+                val spans = text.getSpans(0, text.length, ClickableSpan::class.java)
+                spans.firstOrNull { span ->
+                    val start = text.getSpanStart(span)
+                    val end = text.getSpanEnd(span)
+                    text.subSequence(start, end) == textToMatch
+                }?.onClick(textView)
+            }
+        }
+    }
+}
