@@ -1,0 +1,158 @@
+/**
+ * Contains reusable Espresso UI actions for click, scroll, swipe, text input, and view interaction.
+ * Each function wraps a base action for cleaner test readability and maintainability.
+ */
+object Actions {
+
+    /**
+     * Performs a standard click action on the matched view.
+     */
+    fun click() = ClickActions.click()
+
+    /**
+     * Performs a double-click action on the matched view.
+     */
+    fun doubleClick() = ClickActions.doubleClick()
+
+    /**
+     * Performs a long-click action on the matched view.
+     */
+    fun longClick() = ClickActions.longClick()
+
+    /**
+     * Clicks on a child view with the given child ID inside a parent view with the given parent ID.
+     *
+     * @param parentId Resource ID of the parent view
+     * @param childId Resource ID of the child view inside the parent
+     */
+    fun clickOnChild(parentId: Int, childId: Int) =
+        ClickActions.clickOnChildView(parentId, childId)
+
+    /**
+     * Clicks on a child view matched by [childMatcher] inside a parent matched by [parentMatcher].
+     *
+     * @param parentMatcher Matcher for the parent view
+     * @param childMatcher Matcher for the child view inside the parent
+     */
+    fun clickOnChild(parentMatcher: Matcher<View>, childMatcher: Matcher<View>) =
+        ClickActions.clickOnChild(parentMatcher, childMatcher)
+
+    /**
+     * Clicks on a clickable span text within a TextView.
+     *
+     * @param textRes Resource ID of the spannable text
+     */
+    fun clickSpannable(textRes: Int) = ClickActions.clickSpannableText(textRes)
+
+    /**
+     * Scrolls to the matched view (inside a ScrollView, NestedScrollView, or RecyclerView).
+     */
+    fun scrollTo() = ScrollActions.scrollTo()
+
+    /**
+     * Scrolls to the matched view inside any ScrollView.
+     */
+    fun scrollInAnyScrollView() = ScrollActions.scrollInAnyScrollView()
+
+    /**
+     * Scrolls to a specific position in a scrollable list.
+     *
+     * @param position The position to scroll to
+     */
+    fun scrollToPosition(position: Int) = ScrollActions.scrollToPosition(position)
+
+    /**
+     * Performs a swipe left gesture.
+     */
+    fun swipeLeft() = ScrollActions.swipeLeft()
+
+    /**
+     * Performs a swipe right gesture.
+     */
+    fun swipeRight() = ScrollActions.swipeRight()
+
+    /**
+     * Performs a swipe up gesture.
+     */
+    fun swipeUp() = ScrollActions.swipeUp()
+
+    /**
+     * Performs a swipe down gesture.
+     */
+    fun swipeDown() = ScrollActions.swipeDown()
+
+    /**
+     * Types the given text into the matched input field.
+     *
+     * @param text The text to type
+     */
+    fun typeText(text: String) = TextActions.typeText(text)
+
+    /**
+     * Replaces the current text with the given text in the matched input field.
+     *
+     * @param text The new text to set
+     */
+    fun replaceText(text: String) = TextActions.replaceText(text)
+
+    /**
+     * Clears the current text in the matched input field.
+     */
+    fun clearText() = TextActions.clearText()
+
+    /**
+     * Closes the soft keyboard if it is open.
+     */
+    fun closeSoftKeyboard() = TextActions.closeSoftKeyboard()
+
+    /**
+     * Simulates a back button press event.
+     */
+    fun pressBack() = TextActions.pressBack()
+
+    /**
+     * Waits for a view matching the given [matcher] to be available within [timeout].
+     *
+     * @param matcher The matcher for the view to wait for
+     * @param timeout The maximum time to wait (in milliseconds)
+     */
+    fun waitForMatch(matcher: Matcher<View>, timeout: Long) =
+        WaitActions.waitForMatch(matcher, timeout)
+
+    /**
+     * Waits for any visible view on the screen within a default timeout (5000ms).
+     *
+     * @param timeout Optional custom timeout (in milliseconds)
+     */
+    fun waitForVisible(timeout: Long = 5000) =
+        WaitActions.waitForVisible(timeout)
+
+    /**
+     * Sets the state of a switch (toggle) to the expected value.
+     *
+     * @param state `true` for ON, `false` for OFF
+     */
+    fun setSwitchState(state: Boolean) =
+        SwitchActions.setSwitchToExpectedState(state)
+
+    /**
+     * Clicks on an item at the given position in a RecyclerView.
+     *
+     * @param position The index of the item to click
+     */
+    fun <T> clickItemAtPosition(position: Int) =
+        RecyclerViewActions.clickItemAtPosition(position)
+
+    /**
+     * Clicks a specific child view inside a RecyclerView item at the given position.
+     *
+     * @param position The index of the item in the RecyclerView
+     * @param parentId Resource ID of the parent layout inside the item
+     * @param childViewId Resource ID of the child view inside the parent layout
+     */
+    fun <T> clickChildInItem(
+        position: Int,
+        @IdRes parentId: Int,
+        @IdRes childViewId: Int
+    ) = RecyclerViewActions.clickChildInItem(position, parentId, childViewId)
+}
