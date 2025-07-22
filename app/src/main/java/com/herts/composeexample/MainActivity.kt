@@ -46,6 +46,88 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
+private fun <T> RadioButtonContent(
+    rtl: Boolean,
+    isSelectedOption: Boolean,
+    modifier: Modifier,
+    onOptionSelect: (T) -> Unit,
+    option: T,
+    isEnabled: Boolean,
+    painter: Painter,
+    label: (T) -> String,
+    description: (T) -> String,
+    descriptionTextStyle: TextStyle
+) {
+    Row(
+        modifier = modifier,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        if (!rtl) {
+            IconToggleButtonComposable(
+                modifier = Modifier,
+                isSelectedOption = isSelectedOption,
+                onSelected = { onOptionSelect(option) },
+                isEnabled = isEnabled,
+                painter = painter
+            )
+        }
+
+        // Text column centered to radio button
+        Column(
+            modifier = Modifier
+                .weight(1f)
+                .align(Alignment.CenterVertically),
+            verticalArrangement = Arrangement.Center
+        ) {
+            RadioButtonText(
+                label(option),
+                isEnabled
+            )
+
+            if (description(option).isNotBlank()) {
+                RadioButtonText(
+                    description(option),
+                    isEnabled,
+                    descriptionTextStyle
+                )
+            }
+        }
+
+        if (rtl) {
+            IconToggleButtonComposable(
+                modifier = Modifier,
+                isSelectedOption = isSelectedOption,
+                onSelected = { onOptionSelect(option) },
+                isEnabled = isEnabled,
+                painter = painter
+            )
+        }
+    }
+}
+
+@Composable
+fun RadioButtonText(
+    label: String,
+    isEnabled: Boolean,
+    style: TextStyle = AppTheme.designTokenTypography.typographyStyle5.copy(
+        color = if (isEnabled)
+            AppTheme.designTokenColors.textInputDefault
+        else
+            AppTheme.designTokenColors.textInputDisabled
+    )
+) {
+    Text(
+        text = label,
+        textAlign = TextAlign.Start,
+        style = style,
+        modifier = Modifier
+            .semantics { contentDescription = label }
+            .clearAndSetSemantics {}
+    )
+}
+
+
+@Composable
 fun ImageCard(
     painter: Painter,
     contentDescription: String,
